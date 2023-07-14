@@ -68,17 +68,6 @@ See `notebooks/analysis` to analyze the output of the scripts. For example, afte
 
 ## Citation
 If the code or paper proves fruitful in your research, please consider citing us.
-```
-@inproceedings{
-anonymous2023overthinking,
-title={Overthinking the Truth: Understanding how Language Models process False Demonstrations},
-author={Danny Halawi and Jean-Stanislas Denain and Jacob Steinhardt},
-booktitle={Submitted to The Eleventh International Conference on Learning Representations},
-year={2023},
-url={https://openreview.net/forum?id=em4xg1Gvxa},
-note={under review}
-}
-```
 
 ## Contributions and Contact
 This code was developed by Danny Halawi and Jean-Stanislas Denain. Questions about the codebase can be directed to us ({dhalawi, js_denain}@berkeley.edu, respectively). If you find an issue, please open an issue. If you'd like to contribute, feel free to open a pull request.
