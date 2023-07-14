@@ -5,7 +5,6 @@ from transformers import AutoTokenizer
 
 datasets.disable_progress_bar()
 
-
 def get_dataset(dataset_params: dict) -> list:
     """
     Get the dataset based off |dataset_params|.
@@ -13,8 +12,7 @@ def get_dataset(dataset_params: dict) -> list:
     Parameters
     ----------
     dataset_params : required, dict
-        Dataset metadata, specifically the name of the dataset, configuration,
-        train or test specification, and if the dataset is on huggingface.
+        Dataset metadata.
 
     Returns
     ------
@@ -51,43 +49,35 @@ def get_dataset(dataset_params: dict) -> list:
 class Prefixes:
     """
     Class to build the prefixes.
+
     Attributes
     ----------
     true_prefixes : list
-        |dataset_params.num_inputs| true prefixes, each containing
-        |demo_params.num_demos| demonstrations.
+        |num_inputs| true prefixes, each containing
+        |num_demos| demonstrations.
     false_prefixes : list
-        |dataset_params.num_inputs| false prefixes, each containing
-        |demo_params.num_demos| demonstrations, with |demo_params.true_percent|
-        of the demonstrations being true, and permuted incorrect labels if
-        |demo_params.permuted|, otherwise random incorrect labels.
+        |num_inputs| false prefixes prescribed by |demo_params|, each containing
+        |num_demos| demonstrations.
     prefixes_true_labels : list
         Correct label corresponding to each position in context and prefix.
     prefixes_false_labels : list
         Labels used for false demonstrations for each position in context and
         prefix.
+    true_prefixes_tok : list
+        Tokenized |true_prefixes|.
+    false_prefixes_tok : list
+        Tokenized |false_prefixes|.
+    true_prefixes_tok_prec_label_indx : list
+        Indices of the token preceding the labels in the demonstrations for
+        true prefixes.
+    false_prefixes_tok_prec_label_indx : list
+        Indices of the token preceding the labels in the demonstrations for
+        false prefixes.
+    true_prefixes_tok_label_indx : list
+        Indices of the labels in the demonstrations for true prefixes.
+    false_prefixes_tok_label_indx : list
+        Indices of the labels in the demonstrations for false prefixes.
     """
-    
-    self.true_prefixes = []
-    self.false_prefixes = []
-    self.true_prefixes_labels = []
-    self.false_prefixes_labels = []
-    self.true_prefixes_tok = []
-    self.false_prefixes_tok = []
-    self.true_prefixes_tok_prec_label_indx = []
-    self.true_prefixes_tok_label_indx = []
-    self.false_prefixes_tok_prec_label_indx = []
-    self.false_prefixes_tok_label_indx = []
-    self.true_prefixes.append(true_prefix)
-    self.false_prefixes.append(false_prefix)
-    self.true_prefixes_labels.append(true_labels)
-    self.false_prefixes_labels.append(false_labels)
-    self.true_prefixes_tok.append(true_prefix_t)
-    self.false_prefixes_tok.append(false_prefix_t)
-    self.lab_first_token_ids = [
-        token[0] for token in tokenizer([" " + lab for lab in labels])["input_ids"]
-    ]
-    self.num_labels = len(labels)
 
     def __init__(
         self,
@@ -101,19 +91,24 @@ class Prefixes:
     ):
         """
         Initializes class.
+
         Parameters
         ----------
         dataset : required, list
             List of examples for each class in the dataset.
         prompt_params : required, dict
-            Prompt metadata, specifically the labels, prompt format, and prefix
-            narrative.
+            Prompt metadata.
         demo_params : required, dict
-            Demo metadata, specifically the number of demos, percentage of true
-            demonstrations in the false prefix, and an indicator for if permuted
-            false labels should be used (as opposed to random false labels).
+            Demo metadata.
+        model_params : required, dict
+            Model metadata.
+        tokenizer : required, AutoTokenizer
+            Tokenizer.
         num_inputs : required, int
             The number of inputs for each prefix type.
+        num_inputs : required, int
+            The number of demos for each input.
+
         Returns
         ------
         None
@@ -147,6 +142,26 @@ class Prefixes:
         label_strs: list,
         tokenizer: AutoTokenizer,
     ) -> list:
+        """
+        Finds the positions of the labels and the tokens preceding the labels.
+
+        Parameters
+        ----------
+        demos : required, list
+            Tuple of strings that comprise the sample.
+        prefix_narrative : required, str
+            The string that precedes the demonstrations in an input.
+        labels : required, list
+            List of the label indices for each position in context.
+        label_strs : required, list
+            List of all labels as strings.
+        tokenizer : required, AutoTokenizer
+            Tokenizer.
+
+        Returns
+        ------
+        None
+        """
         PNLNL = len(tokenizer(".\n\n")["input_ids"])
         running_count = (
             len(tokenizer(prefix_narrative)["input_ids"]) + PNLNL
@@ -164,6 +179,20 @@ class Prefixes:
         return prec_lab_indices, lab_indices
 
     def __get_sample_len(self, sample: tuple, tokenizer: AutoTokenizer):
+        """
+        Gets the number of tokens in |sample|.
+
+        Parameters
+        ----------
+        sample : required, tuple
+            Tuple of strings that comprise the sample.
+        tokenizer : required,AutoTokenizer
+            Tokenizer.
+
+        Returns
+        ------
+        None
+        """
         sample_len = 0
         for samp in sample:
             sample_len += len(tokenizer(samp)["input_ids"])
@@ -182,17 +211,26 @@ class Prefixes:
         """
         Sets |self.true_prefixes| and |self.false_prefixes| to the built true
         and false prefixes, and |self.prefixes_true_labels| and |self.prefixes_false_labels|
-        to the labels in the true and false prefixes at each position in context.
+        to the labels in the true and false prefixes at each position in context. Saves
+        the positions of the labels and the tokens preceding the labels.
+
         Parameters
         ----------
         dataset : required, list
             List of examples for each class in the dataset.
         prompt_params : required, dict
-            Prompt metadata (see above).
+            Prompt metadata.
         demo_params : required, dict
-            Demo metadata (see above).
+            Demo metadata.
+        model_params : required, dict
+            Model metadata.
+        tokenizer : required, AutoTokenizer
+            Tokenizer.
         num_inputs : required, int
             The number of inputs for each prefix type.
+        num_inputs : required, int
+            The number of demos for each input.
+
         Returns
         ------
         None
