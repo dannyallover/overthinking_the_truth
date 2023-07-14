@@ -3,9 +3,9 @@
 ![main_fig](results/figures/svg/fig_main.png)
 
 We developed this codebase to study few-shot learning on text classification tasks. More specifically, we seek to understand how language models process prompts containing false demonstrations. Our code makes it possible to:
-- Use the [logit lens](https://www.lesswrong.com/posts/AcKRB8wDpdaN6v6ru/interpreting-gpt-the-logit-lens) to decode the model’s intermediate computations
+- Use the [logit lens](https://www.lesswrong.com/posts/AcKRB8wDpdaN6v6ru/interpreting-gpt-the-logit-lens) and calibration to decode the model’s intermediate computations
 - Compute statistics on attention heads (where they read from and write to)
-- Ablate attention heads to analyse how such interventions affect model behavior  
+- Ablate attention heads to analyse how such interventions affect model behavior
 
 We've made it easy to scale the codebase to other datasets, models, and settings.
 
