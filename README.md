@@ -15,7 +15,7 @@ The code requires a single GPU (see [colab](https://research.google.com/colabora
 ## Dependecies
 We recommend creating a new anaconda environment to simplify package management:
 ```
-conda create -n fewshot_logit_lens python=3.6
+conda create -n fewshot_logit_lens python=3.11
 source activate fewshot_logit_lens
 pip install -r requirements.txt
 ```
