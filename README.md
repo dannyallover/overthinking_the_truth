@@ -4,6 +4,11 @@
 
 This codebase was developed to perform few-shot in-context learning using language models. Particularly, we seek to understand how false demonstrations are processed in contrast to their true counterpart. To this end, we adapt the [logit lens](https://www.lesswrong.com/posts/AcKRB8wDpdaN6v6ru/interpreting-gpt-the-logit-lens) to reveal knowledge that a model represents during its processing. We provide statistics on attention heads (e.g. where do they read from and write to). We finally provide a mechanism to ablate attention heads to analyze how such interventions affect the model's processing of the inputs.
 
+We developed this codebase to study few-shot learning on text classification tasks. More specifically, we seek to understand how language models process prompts containing false demonstrations. Our code makes it possible to:
+- Use the [logit lens](https://www.lesswrong.com/posts/AcKRB8wDpdaN6v6ru/interpreting-gpt-the-logit-lens) to decode the model’s intermediate computations
+- Compute statistics on attention heads (where they read from and write to)
+- Ablate attention heads to analyse how such interventions affect model behavior  
+
 We've made it easy to scale the codebase to other datasets, models, and settings.
 
 ## Requirements
