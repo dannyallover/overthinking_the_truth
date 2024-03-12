@@ -1,0 +1,9 @@
+datasets
+torch
+transformers
+torchvision
+einops
+numpy
+pandas
+matplotlib
+seaborn
