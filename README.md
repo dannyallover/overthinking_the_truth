@@ -9,6 +9,8 @@ We developed this codebase to study few-shot learning on text classification tas
 
 We've made it easy to scale the codebase to other datasets, models, and settings.
 
+See our [paper](https://arxiv.org/abs/2307.09476) for more details.
+
 ## Requirements
 The code requires a single GPU (see [colab](https://research.google.com/colaboratory/faq.html) for free GPU access). There is no training, and inference is relatively cheap. A GPU with high RAM will be needed, however, to run larger models; for example, an A100 40GB and A100 80GB were used to run GPT-J and GPT-NeoX20B, respectively. If you are limited by memory, consider initializing the model with fp16.
 
